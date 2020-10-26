@@ -1,0 +1,14 @@
+---
+# handlers file for hardening_httpd_cis
+- name: start httpd
+  service:
+    name: httpd
+    enabled: yes
+    state: started
+  become: yes
+- name: restart httpd
+  service:
+    name: httpd
+    state: restarted
+  become: yes
+

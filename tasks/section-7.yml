@@ -1,0 +1,137 @@
+- name: "7.1 Ensure mod_ssl and/or mod_nss Is Installed (Scored)"
+  yum:
+    name: 
+      - mod_ssl
+      - openssl
+    state: present
+  register: pkg_result
+  until: pkg_result is success
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.1
+    - section-7
+- name: "7.2 Ensure a Valid Trusted Certificate Is Installed (Scored)"
+  debug:
+    msg: " will be done manually"
+  tags:
+    - cis-7.2
+    - section-7
+- name: "7.3 Ensure the Server's Private Key Is Protected (Scored)"
+  debug:
+    msg: " will be done manually"
+  tags:
+    - cis-7.3
+    - section-7
+- name: "7.4 Ensure Weak SSL Protocols Are Disabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: EOF
+    line: 'SSLProtocol TLSv1.2' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.4
+    - section-7
+- name: "7.5 Ensure Weak SSL/TLS Ciphers Are Disabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'SLProtocol TLS1.2'
+    line: '{{ item }}'
+  loop: 
+    -  SSLHonorCipherOrder On
+    -  SSLCipherSuite ALL:!EXP:!NULL:!LOW:!SSLv2:!RC4:!aNULL
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.5
+    - section-7
+- name: "7.6 Ensure Insecure SSL Renegotiation Is Not Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'SSLHonorCipherOrder On'
+    line: 'SSLInsecureRenegotiation off' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.6
+    - section-7
+- name: "7.7 Ensure SSL Compression is not Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'SSLInsecureRenegotiation off'
+    line: 'SSLCompression off' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.7
+    - section-7
+- name: "7.8 Ensure Medium Strength SSL/TLS Ciphers Are Disabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'SSLCompression off'
+    line: '{{ item }}'
+  loop:
+    - SSLHonorCipherOrder On
+    - SSLCipherSuite ALL:!EXP:!NULL:!LOW:!SSLv2:!RC4:!aNULL:!3DES:!IDEA
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.8
+    - section-7
+- name: "7.9 Ensure All Web Content is Accessed via HTTPS (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'SSLCipherSuite ALL:!EXP:!NULL:!LOW:!SSLv2:!RC4:!aNULL:!3DES:!IDEA'
+    line: 'Redirect permanent / https://www.cisecurity.org/' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.9
+    - section-7
+- name: "7.10 Ensure the TLSv1.0 and TLSv1.1 Protocols are Disabled (Scored)"
+  debug:
+    msg: "already DONE by TASK 7.5 Ensure Weak SSL Protocols Are Disabled"
+  tags:
+    - cis-7.10
+    - section-7
+- name: "7.11 Ensure OCSP Stapling Is Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: EOF
+    line: '{{ item }}'
+  loop:
+    - SSLUseStapling On
+    - SSLStaplingCache "shmcb:logs/ssl_staple_cache(512000)"
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.11
+    - section-7
+- name: "7.12 Ensure HTTP Strict Transport Security Is Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'SSLUseStapling On'
+    line: 'Header always set Strict-Transport-Security "max-age=600"' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.12
+    - section-7
+- name: "7.13 Ensure Only Cipher Suites That Provide Forward Secrecy Are Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'Header always set Strict-Transport-Security "max-age=600"'
+    line: 'SSLCipherSuite ECDHE:DHE:!NULL:!SSLv2:!RC4:!aNULL:!3DES:!IDEA' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-7.13
+    - section-7
+

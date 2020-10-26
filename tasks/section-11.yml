@@ -1,0 +1,21 @@
+- name: "11.1 Ensure SELinux Is Enabled in Enforcing Mode (Scored)"
+  command: setenforce 1
+  ignore_errors: yes
+  tags:
+    - cis-11.1
+    - section-11
+- name: "11.2 Ensure Apache Processes Run in the httpd_t Confined Context(Scored)"
+  command: '{{item}}'
+  with_items:
+    - chcon -t initrc_exec_t /usr/sbin/apachectl
+    - chcon -t httpd_exec_t /usr/sbin/httpd
+  ignore_errors: yes
+  tags:
+    - cis-11.2
+    - section-11
+- name: "11.4 Ensure Only the Necessary SELinux Booleans are Enabled (NotScored)"
+  command: setsebool -P httpd_enable_cgi off
+  ignore_errors: yes
+  tags:
+    - cis-11.4
+    - section-11

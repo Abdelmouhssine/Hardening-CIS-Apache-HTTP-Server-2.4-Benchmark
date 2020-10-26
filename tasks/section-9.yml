@@ -1,0 +1,56 @@
+- name: "9.1 Ensure the TimeOut Is Set to 10 or Less (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: EOF
+    line: 'Timeout 10' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-9.1
+    - section-9
+- name: "9.2 Ensure KeepAlive Is Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'Timeout 10'
+    line: 'KeepAlive on' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-9.2
+    - section-9
+- name: "9.3 Ensure MaxKeepAliveRequests is Set to a Value of 100 or Greater(Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'KeepAlive on'
+    line: 'MaxKeepAliveRequests 100' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-9.3
+    - section-9
+- name: "9.4 Ensure KeepAliveTimeout is Set to a Value of 15 or Less (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'MaxKeepAliveRequests 100'
+    line: 'KeepAliveTimeout 15' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-9.4
+    - section-9
+- name: "9.5 Ensure the Timeout Limits for Request Headers is Set to 40 or Less(Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'KeepAliveTimeout 15'
+    line: 'RequestReadTimeout header=20-40,MinRate=500 body=20,MinRate=500' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-9.5
+    - cis-9.6
+    - section-9

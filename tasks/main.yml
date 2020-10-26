@@ -1,0 +1,32 @@
+---
+# tasks file for hardening_httpd_cis
+- include: section-1.yml
+  become: yes
+- include: section-2.yml
+  become: yes
+- include: section-3.yml
+  become: yes
+- include: section-4.yml
+  become: yes
+
+- include: section-5.yml
+  become: yes
+
+- include: section-6.yml
+  become: yes
+
+- include: section-7.yml
+  become: yes
+
+- include: section-8.yml
+  become: yes
+
+- include: section-9.yml
+  become: yes
+
+- include: section-10.yml
+  become: yes
+
+- include: section-11.yml
+  become: yes
+

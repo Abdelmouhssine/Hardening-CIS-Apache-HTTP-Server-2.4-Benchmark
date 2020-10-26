@@ -1,0 +1,31 @@
+#
+# This configuration file enables the default "Welcome" page if there
+# is no default index page present for the root URL.  To disable the
+# Welcome page, comment out all the lines below.
+#
+# NOTE: if this file is removed, it will be restored on upgrades.
+#
+#<LocationMatch "^/+$">
+#  Options -Indexes
+#  ErrorDocument 403 /noindex/index.html
+#</LocationMatch>
+
+Alias /noindex /usr/share/httpd/noindex
+
+<Directory /usr/share/httpd/noindex>
+  Options MultiViews
+  DirectoryIndex index.html
+
+  AddLanguage en-US .en-US
+  AddLanguage es-ES .es-ES
+  AddLanguage zh-CN .zh-CN
+  AddLanguage zh-HK .zh-HK
+  AddLanguage zh-TW .zh-TW
+
+  LanguagePriority en
+  ForceLanguagePriority Fallback
+
+  AllowOverride None
+  Require all granted
+</Directory>
+

@@ -1,0 +1,33 @@
+- name: "8.1 Ensure ServerTokens is Set to 'Prod' or 'ProductOnly' (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: EOF
+    line: 'ServerTokens Prod'
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-8.1
+    - section-8
+- name: "8.2 Ensure ServerSignature Is Not Enabled (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'ServerTokens Prod'
+    line: 'ServerSignature Off'
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-8.2
+    - section-8
+- name: "8.4 Ensure ETag Response Header Fields Do Not Include Inodes (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'ServerSignature Off'
+    line: 'FileETag None'
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-8.4
+    - section-8

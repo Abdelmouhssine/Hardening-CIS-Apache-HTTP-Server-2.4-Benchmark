@@ -1,0 +1,34 @@
+- name: "4.1 Ensure Access to OS Root Directory Is Denied By Default (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: '<Directory />'
+    line: '{{ item }}'
+  with_items:
+    - Order allow,deny
+    - Allow from all
+  notify: restart httpd 
+  tags:
+    - cis-4.1
+    - section-4
+- name: "4.2 Ensure Appropriate Access to Web Content Is Allowed (Not Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: '<Directory "/var/www/html">'
+    regexp: 'Require all granted'
+    line: '     Require all granted'
+  notify:
+    - restart httpd
+  tags:
+    - cis-4.2
+    - section-4
+- name: "4.3 Ensure OverRide Is Disabled for the OS Root Directory (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: '<Directory />'
+    regexp: '^AllowOverRide None'
+    line: '     AllowOverRide None'
+  notify:
+    - restart httpd
+  tags:
+    - cis-4.3
+    - section-4

@@ -1,0 +1,44 @@
+- name: "10.1 Ensure the LimitRequestLine directive is Set to 512 or less (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: EOF
+    line: 'LimitRequestline 512' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-10.1
+    - section-10
+- name: "10.2 Ensure the LimitRequestFields Directive is Set to 100 or Less (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'LimitRequestline 512'
+    line: 'LimitRequestFields 100' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-10.2
+    - section-10
+- name: "10.3 Ensure the LimitRequestFieldsize Directive is Set to 1024 or Less(Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'LimitRequestFields 100'
+    line: 'LimitRequestFieldSize 1024' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-10.3
+    - section-10
+- name: "10.4 Ensure the LimitRequestBody Directive is Set to 102400 or Less(Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'LimitRequestFieldSize 1024'
+    line: 'LimitRequestBody 102400' 
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-10.3
+    - section-10

@@ -1,0 +1,88 @@
+- name: "6.1 Ensure the Error Log Filename and Severity Level Are ConfiguredCorrectly (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'ErrorLog "logs/error_log"'
+    line: 'LogLevel notice core:info'
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.1
+    - section-6
+- name: "6.2 Ensure a Syslog Facility Is Configured for Error Logging (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'ErrorLog "logs/error_log"'
+    line: 'ErrorLog "syslog:local1"'
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.2
+    - section-6
+- name: "6.3 Ensure the Server Access Log Is Configured Correctly (Scored)"
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    insertafter: 'ErrorLog "logs/error_log"'
+    regexp: '^LogFormat'
+    line: 'LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{Useragent}i\"" combined'
+    state: present
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.3
+    - section-6
+- name: "6.3 Ensure the Server Access Log Is Configured Correctly (Scored)"
+  blockinfile:
+    path: /etc/logrotate.d/httpd
+    block: |
+      /var/log/httpd/*log {
+      missingok
+      notifempty
+      sharedscripts
+      postrotate
+      /bin/kill -HUP 'cat /var/run/httpd.pid 2>/dev/null' 2> /dev/null ||
+      true
+      endscript
+      }
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.3
+    - section-6
+- name: "6.4 Ensure Log Storage and Rotation Is Configured Correctly (Scored)"
+  replace:
+    path: /etc/logrotate.conf
+    regexp: '^monthly'
+    replace: 'weekly'
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.4
+    - section-6
+- name: "6.4 Ensure Log Storage and Rotation Is Configured Correctly (Scored)"
+  replace:
+    path: /etc/logrotate.conf
+    regexp: '^rotate'
+    replace: 'rotate 13'
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.4
+    - section-6
+
+- name: "6.5 Ensure Applicable Patches Are Applied (Scored)"
+  command: yum update -y 
+  tags:
+    - cis-6.5
+    - section-6
+- name: "6.6 Ensure ModSecurity Is Installed and Enabled (Scored)"
+  yum:
+    name: mod_security
+    state: latest
+  notify:
+    - restart httpd
+  tags:
+    - cis-6.6
+    - section-6
+

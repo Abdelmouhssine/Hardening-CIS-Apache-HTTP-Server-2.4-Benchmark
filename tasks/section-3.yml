@@ -1,0 +1,65 @@
+- name: "3.1 Ensure the Apache Web Server Runs As a Non-Root User (Scored)"
+  lineinfile: 
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^User apache'
+    line: 'User apache'
+  notify:
+    - restart httpd
+  tags:
+    - cis-3.1
+    - section-3
+- name: "3.1 Ensure the Apache Web Server Runs As a Non-Root User (Scored)"
+  lineinfile: 
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^Group apache '
+    line: 'Group apache'
+  notify:
+    - restart httpd
+  tags:
+    - cis-3.1
+    - section-3
+- name: "3.2 Ensure the Apache User Account Has an Invalid Shell (Scored)"
+  user:
+    name: apache
+    shell: nologin
+  notify:
+    - restart httpd
+  tags:
+    - cis-3.2
+    - section-3
+- name: "3.3 Ensure the Apache User Account Is Locked (Scored)"
+  command: passwd -l apache
+  notify:
+    - restart httpd
+  tags:
+    - cis-3.3
+    - section-3
+- name: "3.4,3.5 Ensure Apache Directories and Files Are Owned By Root (Scored)"
+  file: 
+    path: /etc/httpd
+    owner: root 
+    group: root
+  notify:
+    - restart httpd
+  tags:
+    - cis-3.4
+    - cis-3.5
+    - section-3
+- name: "3.6 Ensure Other Write Access on Apache Directories and Files Is Restricted (Scored)"
+  command: chmod -R o-w /etc/httpd/
+  tags:
+    - cis-3.6
+    - section-3
+  notify:
+    - restart httpd
+- name: "3.7 Ensure the Core Dump Directory Is Secured (Scored)"
+  file:
+    path: /var/log/httpd
+    owner: root
+    group: apache
+    mode: 0644
+  notify:
+    - restart httpd
+  tags:
+    - cis-3.7
+    - section-3

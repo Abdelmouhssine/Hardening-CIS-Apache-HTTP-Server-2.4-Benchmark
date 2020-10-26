@@ -1,0 +1,324 @@
+- name: "2.1 Ensure Only Necessary Authentication and Authorization ModulesAre Enabled (Not Scored)"
+  block:
+    - name: "Commenter LoadModule authn_anon_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authn_anon_module\s+modules/mod_authn_anon.so)*$'
+        replace: '#LoadModule authn_anon_module modules/mod_authn_anon.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule authn_dbd_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authn_dbd_module\s+modules/mod_authn_dbd.so)*$'
+        replace: '#LoadModule authn_dbd_module modules/mod_authn_dbd.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule authn_dbm_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authn_dbm_module\s+modules/mod_authn_dbm.so)*$'
+        replace: '#LoadModule authn_dbm_module modules/mod_authn_dbm.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule authn_socache_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authn_socache_module\s+modules/mod_authn_socache.so)*$'
+        replace: '#LoadModule authn_socache_module modules/mod_authn_socache.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule authz_dbd_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authz_dbd_module\s+modules/mod_authz_dbd.so)*$'
+        replace: '#LoadModule authz_dbd_module modules/mod_authz_dbd.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule authz_dbm_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authz_dbm_module\s+modules/mod_authz_dbm.so)*$'
+        replace: '#LoadModule authz_dbm_module modules/mod_authz_dbm.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule authz_owner_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-base.conf
+        regexp: '^(LoadModule\s+authz_owner_module\s+modules/mod_authz_owner.so)*$'
+        replace: '#LoadModule authz_owner_module modules/mod_authz_owner.so'
+      become: yes
+      notify:
+        - restart httpd
+  tags:
+    - cis-2.1
+    - section-2
+- name: "2.2 Ensure the Log Config Module Is Enabled (Scored) "
+  replace:
+    path: /etc/httpd/conf.modules.d/00-base.conf
+    regexp: '^(LoadModule\s+log_config_module\s+modules/mod_log_config.so)*$'
+    replace: 'LoadModule log_config_module modules/mod_log_config.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.2
+    - section-2
+- name: "2.3 Ensure the WebDAV Modules Are Disabled (Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-dav.conf
+    regexp: '^(LoadModule\s+dav_module\s+modules/mod_dav.so)*$'
+    replace: '#LoadModule dav_module modules/mod_dav.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.3
+    - section-2
+- name: "2.3 Ensure the WebDAV Modules Are Disabled (Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-dav.conf
+    regexp: '^(LoadModule\s+dav_fs_module\s+modules/mod_dav_fs.so)*$'
+    replace: '#LoadModule dav_fs_module modules/mod_dav_fs.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.3
+    - section-2
+- name: "2.3 Ensure the WebDAV Modules Are Disabled (Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-dav.conf
+    regexp: '^(LoadModule\s+dav_lock_module\s+modules/mod_dav_lock.so)*$'
+    replace: '#LoadModule dav_lock_module modules/mod_dav_lock.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.3
+    - section-2
+
+- name: "2.4 Ensure the Status Module Is Disabled (Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-base.conf
+    regexp: '^(LoadModule\s+status_module\s+modules/mod_status.so)*$'
+    replace: '#LoadModule status_module modules/mod_status.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.4
+    - section-2
+
+# If we Execute this Task , the HTTPD Status will be Stopped and destroyed . Abdelmouhssine Houari
+#- name: "2.5 Ensure the Autoindex Module Is Disabled (Scored)"
+#  replace:
+#    path: /etc/httpd/conf.modules.d/00-base.conf
+#    regexp: '^(LoadModule\s+autoindex_module\s+modules/mod_autoindex.so)*$'
+#    replace: '#LoadModule autoindex_module modules/mod_autoindex.so'
+#  become: yes
+#  notify:
+#    - restart httpd
+#  tags:
+#    - cis-2.5
+#    - section-2
+- name: "2.6 Ensure the Proxy Modules Are Disabled (Scored)"
+  block:
+    - name: "Commenter LoadModule proxy_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_module\s+modules/mod_proxy.so)*$'
+        replace: '#LoadModule proxy_module modules/mod_proxy.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_ajp_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_ajp_module\s+modules/mod_proxy_ajp.so)*$'
+        replace: '#LoadModule proxy_ajp_module modules/mod_proxy_ajp.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_balancer_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_balancer_module\s+modules/mod_proxy_balancer.so)*$'
+        replace: '#LoadModule proxy_balancer_module modules/mod_proxy_balancer.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_connect_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_connect_module\s+modules/mod_proxy_connect.so)*$'
+        replace: '#LoadModule proxy_connect_module modules/mod_proxy_connect.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_express_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_express_module\s+modules/mod_proxy_express.so)*$'
+        replace: '#LoadModule proxy_express_module modules/mod_proxy_express.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_fcgi_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_fcgi_module\s+modules/mod_proxy_fcgi.so)*$'
+        replace: '#LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_fdpass_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_fdpass_module\s+modules/mod_proxy_fdpass.so)*$'
+        replace: '#LoadModule proxy_fdpass_module modules/mod_proxy_fdpass.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_ftp_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_ftp_module\s+modules/mod_proxy_ftp.so)*$'
+        replace: '#LoadModule proxy_ftp_module modules/mod_proxy_ftp.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_http_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_http_module\s+modules/mod_proxy_http.so)*$'
+        replace: '#LoadModule proxy_http_module modules/mod_proxy_http.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_scgi_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_scgi_module\s+modules/mod_proxy_scgi.so)*$'
+        replace: '#LoadModule proxy_scgi_module modules/mod_proxy_scgi.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_wstunnel_module "
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_wstunnel_module\s+modules/mod_proxy_wstunnel.so)*$'
+        replace: '#LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule lbmethod_bybusyness_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+lbmethod_bybusyness_module\s+modules/mod_lbmethod_bybusyness.so)*$'
+        replace: '#LoadModule lbmethod_bybusyness_module modules/mod_lbmethod_bybusyness.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule lbmethod_byrequests_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+lbmethod_byrequests_module\s+modules/mod_lbmethod_byrequests.so)*$'
+        replace: '#LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule lbmethod_bytraffic_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+lbmethod_bytraffic_module\s+modules/mod_lbmethod_bytraffic.so)*$'
+        replace: '#LoadModule lbmethod_bytraffic_module modules/mod_lbmethod_bytraffic.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule lbmethod_heartbeat_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+lbmethod_heartbeat_module\s+modules/mod_lbmethod_heartbeat.so)*$'
+        replace: '#LoadModule lbmethod_heartbeat_module modules/mod_lbmethod_heartbeat.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_hcheck_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_hcheck_module\s+modules/mod_proxy_hcheck.so)*$'
+        replace: '#LoadModule proxy_hcheck_module modules/mod_proxy_hcheck.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_uwsgi_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/00-proxy.conf
+        regexp: '^(LoadModule\s+proxy_uwsgi_module\s+modules/mod_proxy_uwsgi.so)*$'
+        replace: '#LoadModule proxy_uwsgi_module modules/mod_proxy_uwsgi.so'
+      become: yes
+      notify:
+        - restart httpd
+    - name: "Commenter LoadModule proxy_http2_module"
+      replace:
+        path: /etc/httpd/conf.modules.d/10-proxy_h2.conf
+        regexp: '^(LoadModule\s+proxy_http2_module\s+modules/mod_proxy_http2.so)*$'
+        replace: '#LoadModule proxy_http2_module modules/mod_proxy_http2.so'
+      become: yes
+      notify:
+        - restart httpd
+  ignore_errors: yes
+  tags:
+    - cis-2.6
+    - section-2
+- name: "2.7 Ensure the User Directories Module Is Disabled (Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-base.conf
+    regexp: '^(LoadModule\s+userdir_module\s+modules/mod_userdir.so)*$'
+    replace: '#LoadModule userdir_module modules/mod_userdir.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.7
+    - section-2
+- name: "2.8 Ensure the Info Module Is Disabled (Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-base.conf
+    regexp: '^(LoadModule\s+info_module\s+modules/mod_info.so)*$'
+    replace: '#LoadModule info_module modules/mod_info.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.8
+    - section-2
+- name: "2.9 Ensure the Basic and Digest Authentication Modules are Disabled(Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-base.conf
+    regexp: '^(LoadModule\s+mod_auth_basic\s+modules/mod_auth_basic.so)*$'
+    replace: '#LoadModule info_module modules/mod_auth_basic.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.9
+    - section-2
+- name: "2.9 Ensure the Basic and Digest Authentication Modules are Disabled(Scored)"
+  replace:
+    path: /etc/httpd/conf.modules.d/00-base.conf
+    regexp: '^(LoadModule\s+auth_digest_module\s+modules/mod_auth_digest.so)*$'
+    replace: '#LoadModule auth_digest_module modules/mod_auth_digest.so'
+  become: yes
+  notify:
+    - restart httpd
+  tags:
+    - cis-2.9
+    - section-2
